@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ბანერი — სარეკლამო პოსტების სტუდია</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+  :root{
+    --ink:#101826;
+    --navy:#16233f;
+    --navy-deep:#0d1730;
+    --blue:#3d7fff;
+    --blue-soft:#e8f0ff;
+    --paper:#f4f6fa;
+    --line:#d8dee9;
+    --grey:#5b6577;
+    --white:#ffffff;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    line-height:1.5;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 28px;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(244,246,250,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    height:72px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;}
+  .brand-mark{
+    width:30px;height:30px;border-radius:7px;
+    background:linear-gradient(135deg,var(--blue),var(--navy));
+    position:relative;flex:none;
+  }
+  .brand-mark::after{
+    content:'';position:absolute;inset:7px;
+    border:2px solid var(--white);border-radius:2px;
+  }
+  .navlinks{display:flex;gap:34px;align-items:center;}
+  .navlinks a{font-size:.93rem;color:var(--grey);transition:color .15s;}
+  .navlinks a:hover{color:var(--ink);}
+  .nav-cta{
+    background:var(--ink);color:var(--white)!important;
+    padding:10px 20px;border-radius:7px;font-size:.9rem;font-weight:600;
+    transition:background .15s;
+  }
+  .nav-cta:hover{background:var(--navy);}
+  .navtoggle{display:none;background:none;border:0;cursor:pointer;padding:6px;}
+  .navtoggle span{display:block;width:22px;height:2px;background:var(--ink);margin:5px 0;}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    position:relative;
+    background:var(--navy-deep);
+    color:var(--white);
+    overflow:hidden;
+    padding:108px 0 0;
+  }
+  header.hero::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 14% 18%, rgba(61,127,255,.35), transparent 42%),
+      radial-gradient(circle at 86% 76%, rgba(61,127,255,.18), transparent 50%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    position:relative;z-index:1;
+    display:grid;grid-template-columns:1.05fr .95fr;gap:54px;
+    align-items:center;
+    padding-bottom:90px;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    color:#9fc1ff;margin-bottom:22px;
+  }
+  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(61,127,255,.25);}
+  h1.headline{
+    font-size:clamp(2.3rem,4.4vw,3.4rem);
+    line-height:1.08;
+    margin-bottom:22px;
+  }
+  h1.headline em{
+    font-style:normal;color:#9fc1ff;
+  }
+  .hero-sub{
+    color:#b7c2da;font-size:1.05rem;max-width:480px;margin-bottom:32px;
+  }
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:14px 26px;border-radius:8px;font-weight:600;font-size:.95rem;
+    transition:transform .15s, box-shadow .15s, background .15s;
+    cursor:pointer;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--blue);color:var(--white);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(61,127,255,.35);}
+  .btn-ghost{border:1px solid rgba(255,255,255,.28);color:var(--white);}
+  .btn-ghost:hover{background:rgba(255,255,255,.08);}
+  .hero-stats{display:flex;gap:38px;}
+  .stat .num{font-family:'Fraunces',serif;font-size:1.7rem;color:var(--white);}
+  .stat .label{font-size:.78rem;color:#8693ab;margin-top:2px;}
+
+  /* hero mock — "canva-like" card preview */
+  .hero-visual{position:relative;}
+  .stack{position:relative;height:430px;}
+  .mock-card{
+    position:absolute;width:280px;border-radius:14px;
+    background:var(--white);box-shadow:0 30px 60px -20px rgba(0,0,0,.45);
+    overflow:hidden;border:1px solid rgba(255,255,255,.06);
+  }
+  .mock-card .mc-body{aspect-ratio:4/5;background:linear-gradient(160deg,#eef3ff,#dbe7ff);position:relative;}
+  .mock-card .mc-body .ph{position:absolute;background:rgba(22,35,63,.12);border-radius:4px;}
+  .mock-card .mc-foot{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;}
+  .mock-card .mc-foot .tag{font-size:.62rem;background:var(--blue-soft);color:var(--blue);padding:4px 8px;border-radius:5px;font-weight:600;}
+  .mock-card .mc-foot .dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:#d3d9e3;margin-left:3px;}
+  .mc1{top:0;left:30px;transform:rotate(-6deg);z-index:1;}
+  .mc2{top:40px;left:160px;transform:rotate(4deg);z-index:2;}
+  .mc1 .mc-body .ph:nth-child(1){top:18px;left:18px;width:60%;height:14px;}
+  .mc1 .mc-body .ph:nth-child(2){bottom:24px;left:18px;width:40%;height:32px;border-radius:6px;background:var(--blue);opacity:.85;}
+  .mc2 .mc-body{background:linear-gradient(160deg,#16233f,#0d1730);}
+  .mc2 .mc-body .ph{background:rgba(255,255,255,.18);}
+  .mc2 .mc-body .ph:nth-child(1){top:24px;left:22px;width:70%;height:10px;}
+  .mc2 .mc-body .ph:nth-child(2){top:42px;left:22px;width:45%;height:10px;}
+  .mc2 .mc-body .ph:nth-child(3){bottom:26px;left:22px;width:55%;height:36px;border-radius:6px;background:var(--blue);opacity:.9;}
+  .cursor-chip{
+    position:absolute;bottom:18px;right:14px;z-index:3;
+    background:var(--white);padding:7px 12px;border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    font-size:.75rem;font-weight:600;display:flex;gap:6px;align-items:center;
+    animation:floaty 3.5s ease-in-out infinite;
+  }
+  .cursor-chip::before{content:'✎';color:var(--blue);}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+  section{padding:96px 0;}
+  .section-head{max-width:560px;margin-bottom:54px;}
+  .section-head .mono{color:var(--blue);margin-bottom:14px;display:block;}
+  .section-head h2{font-size:clamp(1.7rem,3vw,2.3rem);}
+  .section-head p{color:var(--grey);margin-top:14px;font-size:1.02rem;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+  .how-step{padding:0 32px;position:relative;}
+  .how-step:not(:last-child){border-right:1px solid var(--line);}
+  .how-step .si{
+    font-family:'Fraunces',serif;font-size:.9rem;color:var(--blue);
+    width:38px;height:38px;border:1.5px solid var(--blue);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;margin-bottom:20px;
+  }
+  .how-step h3{font-size:1.12rem;margin-bottom:10px;}
+  .how-step p{color:var(--grey);font-size:.92rem;}
+
+  /* ---------- TEMPLATE GALLERY ---------- */
+  .gallery-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  }
+  .tpl-card{
+    background:var(--white);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;transition:transform .18s, box-shadow .18s;cursor:pointer;
+  }
+  .tpl-card:hover{transform:translateY(-5px);box-shadow:0 18px 34px -16px rgba(16,24,38,.22);}
+  .tpl-thumb{aspect-ratio:4/5;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:16px;}
+  .tpl-thumb .tlabel{font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+  .tpl-thumb .tprice{font-family:'Fraunces',serif;font-size:1.3rem;}
+  .tpl-thumb .tcta{
+    align-self:flex-start;font-size:.66rem;font-weight:700;
+    padding:6px 10px;border-radius:5px;
+  }
+  .t1 .tpl-thumb{background:linear-gradient(150deg,#16233f,#3d7fff);color:#fff;}
+  .t1 .tcta{background:#fff;color:#16233f;}
+  .t2 .tpl-thumb{background:#f0f2f6;color:#16233f;}
+  .t2 .tprice{color:#3d7fff;}
+  .t2 .tcta{background:#16233f;color:#fff;}
+  .t3 .tpl-thumb{background:#0d1730;color:#fff;}
+  .t3 .tcta{background:#3d7fff;color:#fff;}
+  .t4 .tpl-thumb{background:linear-gradient(150deg,#e8f0ff,#cdddff);color:#16233f;}
+  .t4 .tcta{background:#16233f;color:#fff;}
+  .tpl-meta{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+  .tpl-meta .tname{font-size:.88rem;font-weight:600;}
+  .tpl-meta .tedit{font-size:.74rem;color:var(--blue);font-weight:600;}
+  .gallery-foot{display:flex;justify-content:center;margin-top:40px;}
+  .btn-outline{border:1px solid var(--line);color:var(--ink);background:var(--white);}
+  .btn-outline:hover{border-color:var(--ink);}
+
+  /* ---------- EDITOR DEMO ---------- */
+  .editor-section{background:var(--navy-deep);color:var(--white);}
+  .editor-section .section-head p{color:#aab6cf;}
+  .editor-section .section-head .mono{color:#9fc1ff;}
+  .editor-shell{
+    background:#0a1226;border:1px solid #233152;border-radius:14px;
+    overflow:hidden;display:grid;grid-template-columns:230px 1fr;min-height:440px;
+  }
+  .editor-side{border-right:1px solid #233152;padding:22px;}
+  .editor-side .es-title{font-size:.72rem;color:#7b87a3;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;}
+  .es-row{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:.86rem;color:#cdd6ea;border-bottom:1px solid #182238;}
+  .es-row:last-child{border-bottom:none;}
+  .es-dot{width:14px;height:14px;border-radius:4px;flex:none;}
+  .editor-main{padding:30px 36px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .canvas{
+    width:340px;aspect-ratio:4/5;border-radius:10px;
+    background:linear-gradient(150deg,#16233f,#3d7fff);
+    position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.08), 0 30px 60px -20px rgba(0,0,0,.5);
+    padding:28px;color:#fff;
+  }
+  .canvas .editable{
+    position:relative;display:inline-block;
+    outline:1.5px dashed rgba(255,255,255,.4);outline-offset:4px;border-radius:2px;padding:2px 4px;
+  }
+  .canvas .ctitle{font-family:'Fraunces',serif;font-size:1.55rem;line-height:1.15;display:block;margin-top:60px;}
+  .canvas .cbody{font-size:.85rem;color:#dbe6ff;display:block;margin-top:14px;max-width:230px;}
+  .canvas .cbtn{
+    position:absolute;bottom:28px;left:28px;background:#fff;color:#16233f;
+    font-size:.78rem;font-weight:700;padding:9px 16px;border-radius:6px;
+  }
+  .editor-hint{margin-top:18px;font-size:.78rem;color:#7b87a3;display:flex;align-items:center;gap:8px;}
+
+  /* ---------- PRICING ---------- */
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .price-card{
+    background:var(--white);border:1px solid var(--line);border-radius:14px;
+    padding:34px 28px;display:flex;flex-direction:column;
+  }
+  .price-card.featured{border-color:var(--navy);box-shadow:0 20px 40px -22px rgba(16,24,38,.3);position:relative;}
+  .price-card.featured::before{
+    content:'პოპულარული';position:absolute;top:-12px;right:24px;
+    background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;
+    padding:5px 10px;border-radius:5px;letter-spacing:.04em;
+  }
+  .price-card h3{font-size:1.15rem;margin-bottom:6px;}
+  .price-card .pdesc{color:var(--grey);font-size:.85rem;margin-bottom:22px;}
+  .price-card .pamount{font-family:'Fraunces',serif;font-size:2.1rem;margin-bottom:4px;}
+  .price-card .pamount span{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:500;color:var(--grey);}
+  .price-card ul{list-style:none;margin:24px 0 28px;flex:1;}
+  .price-card li{font-size:.88rem;color:var(--ink);padding:8px 0;border-top:1px solid #eef0f4;display:flex;gap:9px;}
+  .price-card li:first-child{border-top:none;}
+  .price-card li::before{content:'✓';color:var(--blue);font-weight:700;}
+
+  /* ---------- CONTACT ---------- */
+  .contact{background:var(--navy);color:#fff;}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+  .contact h2{font-size:clamp(1.7rem,3vw,2.3rem);margin-bottom:16px;}
+  .contact p.lead{color:#b7c2da;margin-bottom:32px;}
+  .contact-info{display:flex;flex-direction:column;gap:18px;}
+  .ci-row{display:flex;gap:14px;align-items:flex-start;}
+  .ci-ico{
+    width:38px;height:38px;border-radius:8px;background:rgba(61,127,255,.18);
+    display:flex;align-items:center;justify-content:center;flex:none;color:#9fc1ff;font-size:.95rem;
+  }
+  .ci-row .ci-label{font-size:.74rem;color:#8693ab;text-transform:uppercase;letter-spacing:.08em;}
+  .ci-row .ci-value{font-size:.97rem;margin-top:2px;}
+  form.cform{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:30px;}
+  .cform label{display:block;font-size:.78rem;color:#aab6cf;margin-bottom:7px;}
+  .cform input,.cform textarea{
+    width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);
+    border-radius:8px;padding:11px 13px;color:#fff;font-family:'Inter',sans-serif;font-size:.92rem;
+    margin-bottom:18px;
+  }
+  .cform input::placeholder,.cform textarea::placeholder{color:#5e6c89;}
+  .cform textarea{resize:vertical;min-height:90px;}
+  .cform .btn-primary{width:100%;justify-content:center;border:none;}
+  .form-note{font-size:.74rem;color:#6c7892;margin-top:12px;text-align:center;}
+
+  footer{background:var(--navy-deep);color:#7b87a3;padding:44px 0;}
+  .foot-grid{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
+  .foot-grid .brand{color:#fff;}
+  .foot-links{display:flex;gap:26px;font-size:.85rem;}
+  .foot-links a:hover{color:#fff;}
+
+  @media (max-width:920px){
+    .navlinks{display:none;}
+    .navtoggle{display:block;}
+    .hero-grid{grid-template-columns:1fr;padding-bottom:60px;}
+    .hero-visual{display:none;}
+    .how-grid{grid-template-columns:1fr;gap:32px;}
+    .how-step{border-right:none!important;padding:0;}
+    .gallery-grid{grid-template-columns:repeat(2,1fr);}
+    .editor-shell{grid-template-columns:1fr;}
+    .editor-side{border-right:none;border-bottom:1px solid #233152;}
+    .pricing-grid{grid-template-columns:1fr;}
+    .contact-grid{grid-template-columns:1fr;gap:40px;}
+    section{padding:64px 0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cursor-chip{animation:none;}
+    html{scroll-behavior:auto;}
+  }
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
+  /* ---------- EDITOR MODAL ---------- */
+  .editor-overlay{
+    position:fixed;inset:0;background:rgba(10,15,26,.62);
+    display:none;align-items:center;justify-content:center;z-index:200;
+    padding:24px;
+  }
+  .editor-overlay.open{display:flex;}
+  .editor-modal{
+    background:var(--paper);border-radius:16px;width:100%;max-width:980px;
+    max-height:92vh;overflow:hidden;display:flex;flex-direction:column;
+    box-shadow:0 40px 80px -20px rgba(0,0,0,.5);
+  }
+  .em-top{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 22px;border-bottom:1px solid var(--line);background:var(--white);
+  }
+  .em-name-input{
+    border:none;background:none;font-family:'Fraunces',serif;font-size:1.1rem;
+    font-weight:600;color:var(--ink);outline:none;border-radius:6px;padding:4px 6px;
+  }
+  .em-name-input:focus{background:var(--blue-soft);}
+  .btn-icon{
+    border:none;background:var(--paper);width:34px;height:34px;border-radius:8px;
+    cursor:pointer;font-size:.95rem;color:var(--grey);
+  }
+  .btn-icon:hover{background:var(--line);}
+  .em-body{display:grid;grid-template-columns:220px 1fr;flex:1;overflow:auto;}
+  .em-side{padding:22px;border-right:1px solid var(--line);background:var(--white);}
+  .em-side-block{margin-bottom:26px;}
+  .em-side-block .es-title{font-size:.7rem;color:var(--grey);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .swatch-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;max-height:140px;overflow-y:auto;padding:2px;}
+  .swatch{width:22px;height:22px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:transform .12s;flex:none;}
+  .swatch:hover{transform:scale(1.1);}
+  .swatch.active{border-color:var(--blue);}
+  .color-input{width:100%;height:34px;border:1px solid var(--line);border-radius:7px;cursor:pointer;background:none;}
+  .upload-btn{
+    display:block;text-align:center;background:var(--ink);color:#fff;font-size:.82rem;
+    font-weight:600;padding:9px 0;border-radius:7px;cursor:pointer;margin-bottom:8px;
+  }
+  .upload-btn:hover{background:var(--navy);}
+  .link-btn{
+    border:none;background:none;color:var(--blue);font-size:.8rem;font-weight:600;
+    cursor:pointer;padding:4px 0;
+  }
+  .link-btn:hover{text-decoration:underline;}
+  .em-main{padding:30px;display:flex;flex-direction:column;align-items:center;}
+  .em-canvas-wrap{display:flex;justify-content:center;width:100%;padding:10px 0 26px;}
+  .em-canvas{
+    width:360px;cursor:default;background-size:cover;background-position:center;
+  }
+  .em-canvas .editable{outline:1.5px dashed rgba(255,255,255,.45);outline-offset:3px;border-radius:3px;}
+  .em-canvas .editable:focus{outline:1.5px solid #fff;}
+  .em-eyebrow{
+    display:block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+    letter-spacing:.1em;text-transform:uppercase;opacity:.85;margin-top:4px;
+  }
+  .em-title{font-family:'Fraunces',serif;font-size:1.55rem;line-height:1.15;display:block;margin-top:14px;}
+  .em-body-text{font-size:.85rem;display:block;margin-top:14px;max-width:240px;opacity:.9;}
+  .em-btn{
+    position:absolute;bottom:28px;left:28px;background:#fff;color:#16233f;
+    font-size:.78rem;font-weight:700;padding:9px 16px;border-radius:6px;
+  }
+  .em-actions{display:flex;gap:12px;}
+  .gallery-grid .tpl-card{position:relative;}
+  .tpl-remove{
+    position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:6px;
+    background:rgba(16,24,38,.55);color:#fff;border:none;font-size:.8rem;cursor:pointer;
+    z-index:2;display:none;align-items:center;justify-content:center;
+  }
+  .tpl-card:hover .tpl-remove{display:flex;}
+
+  @media (max-width:760px){
+    .em-body{grid-template-columns:1fr;}
+    .em-side{border-right:none;border-bottom:1px solid var(--line);}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="brand-mark"></span>ბანერი</div>
+    <div class="navlinks">
+      <a href="#how">როგორ მუშაობს</a>
+      <a href="#templates">შაბლონები</a>
+      <a href="#pricing">ფასები</a>
+      <a href="#contact">კონტაქტი</a>
+    </div>
+    <a href="#templates" class="nav-cta">დაწყება</a>
+    <button class="navtoggle" aria-label="მენიუ"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow mono">სარეკლამო პოსტების სტუდია</span>
+      <h1 class="headline">მზა რეკლამები ნებისმიერი<br><em>ბიზნესისთვის</em>, ერთ წუთში მზადყოფნაში</h1>
+      <p class="hero-sub">აირჩიე შაბლონი, შეცვალე ტექსტი და ფერები პირდაპირ ბრაუზერში — ისე მარტივად, როგორც Canva-ში — და გადმოწერე გამოსაქვეყნებლად მზად მასალა.</p>
+      <div class="hero-actions">
+        <a href="#templates" class="btn btn-primary">შაბლონების ნახვა →</a>
+        <a href="#how" class="btn btn-ghost">როგორ მუშაობს</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">240+</div><div class="label">მზა შაბლონი</div></div>
+        <div class="stat"><div class="num">12</div><div class="label">ბიზნეს კატეგორია</div></div>
+        <div class="stat"><div class="num">3 წთ</div><div class="label">საშუალო რედაქტირება</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="stack">
+        <div class="mock-card mc1">
+          <div class="mc-body"><div class="ph"></div><div class="ph"></div></div>
+          <div class="mc-foot"><span class="tag">საქმიანი</span><span class="dots"><span></span><span></span><span></span></span></div>
+        </div>
+        <div class="mock-card mc2">
+          <div class="mc-body"><div class="ph"></div><div class="ph"></div><div class="ph"></div></div>
+          <div class="mc-foot"><span class="tag">აქცია</span><span class="dots"><span></span><span></span><span></span></span></div>
+          <div class="cursor-chip">რედაქტირება</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="mono">პროცესი</span>
+      <h2>სამი ნაბიჯი გამოქვეყნებამდე</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="si">1</div>
+        <h3>აირჩიე შაბლონი</h3>
+        <p>დაათვალიერე კატეგორიები — გაყიდვები, ღონისძიება, აქცია, საკონტაქტო ბარათი — და აირჩიე ვაიბი, რომელიც ბრენდს ერგება.</p>
+      </div>
+      <div class="how-step">
+        <div class="si">2</div>
+        <h3>დაარედაქტირე ბრაუზერში</h3>
+        <p>დააწექი ტექსტს ან ფერს და შეცვალე ადგილზე — ცალკე პროგრამის ჩამოტვირთვა არ გჭირდება.</p>
+      </div>
+      <div class="how-step">
+        <div class="si">3</div>
+        <h3>გადმოწერე და გამოაქვეყნე</h3>
+        <p>მზა ფაილი ჩამოწერ ერთ დაჭერით და დაპოსტავ Facebook, Instagram თუ ნებისმიერ სხვა არხზე.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="templates">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="mono">ბიბლიოთეკა</span>
+      <h2>მზა შაბლონები, ყველა ბიზნესისთვის</h2>
+      <p>ყველა შაბლონი მზადყოფნაშია ტექსტითა და ფერით — საჭიროა მხოლოდ შენი ბრენდის დეტალები.</p>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="gallery-foot">
+      <button class="btn btn-outline" id="addTemplateBtn">+ ჩემი ცარიელი შაბლონი</button>
+    </div>
+  </div>
+</section>
+
+<section class="editor-section" id="editor">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="mono">სამუშაო გარემო</span>
+      <h2>რედაქტირება ისეთივე მარტივი, როგორც Canva-ში</h2>
+      <p>დააწექი ტექსტს ან ფერის ბლოკს — ცვლილება ხდება პირდაპირ გვერდზე, ჩამოტვირთვის გარეშე.</p>
+    </div>
+    <div class="editor-shell">
+      <div class="editor-side">
+        <div class="es-title">ფერის პალიტრა</div>
+        <div class="es-row"><span class="es-dot" style="background:#3d7fff"></span> მთავარი ლურჯი</div>
+        <div class="es-row"><span class="es-dot" style="background:#16233f"></span> ღამისფერი</div>
+        <div class="es-row"><span class="es-dot" style="background:#ffffff;border:1px solid #444"></span> თეთრი</div>
+        <div class="es-title" style="margin-top:24px;">შრიფტი</div>
+        <div class="es-row">Fraunces — სათაური</div>
+        <div class="es-row">Inter — ტექსტი</div>
+      </div>
+      <div class="editor-main">
+        <div class="canvas" id="demoCanvasOpener" role="button" tabindex="0" style="cursor:pointer;">
+          <span class="editable ctitle">შენი სათაური აქ</span>
+          <span class="editable cbody">დააწექი და ჩაასწორე ტექსტი შენი შეტყობინებით.</span>
+          <span class="cbtn editable">გაიგე მეტი</span>
+        </div>
+        <div class="editor-hint">✎ დააწექი ზემოთ — გაიხსნება ნამდვილი რედაქტორი</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="mono">ფასები</span>
+      <h2>გამჭვირვალე გეგმები ყველა მასშტაბისთვის</h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>დაბალანსებული</h3>
+        <p class="pdesc">სოციალური ქსელისთვის, თვეში 10-მდე პოსტი</p>
+        <div class="pamount">₾29<span>/თვეში</span></div>
+        <ul>
+          <li>40 მზა შაბლონი</li>
+          <li>ტექსტისა და ფერის რედაქტირება</li>
+          <li>JPG/PNG ექსპორტი</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline" style="justify-content:center;">დაწყება</a>
+      </div>
+      <div class="price-card featured">
+        <h3>ბიზნესი</h3>
+        <p class="pdesc">მცირე და საშუალო ბიზნესისთვის</p>
+        <div class="pamount">₾79<span>/თვეში</span></div>
+        <ul>
+          <li>240+ მზა შაბლონი</li>
+          <li>ბრენდის ფერებისა და ლოგოს დამატება</li>
+          <li>დაუსაბამო ექსპორტი</li>
+          <li>გუნდის წვდომა (3 წევრი)</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary" style="justify-content:center;">დაწყება</a>
+      </div>
+      <div class="price-card">
+        <h3>სააგენტო</h3>
+        <p class="pdesc">მრავალი კლიენტისთვის ერთად</p>
+        <div class="pamount">₾199<span>/თვეში</span></div>
+        <ul>
+          <li>ყველაფერი „ბიზნესიდან“</li>
+          <li>ულიმიტო გუნდი</li>
+          <li>კლიენტთა ცალკე სივრცეები</li>
+          <li>პრიორიტეტული მხარდაჭერა</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline" style="justify-content:center;">დაკავშირება</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap contact-grid">
+    <div>
+      <span class="eyebrow mono" style="color:#9fc1ff;">კონტაქტი</span>
+      <h2>მზად ხარ პირველი პოსტისთვის?</h2>
+      <p class="lead">დაგვიკავშირდე და გეტყვით, რომელი გეგმა შეესაბამება შენი ბიზნესს.</p>
+      <div class="contact-info">
+        <div class="ci-row">
+          <div class="ci-ico">@</div>
+          <div><div class="ci-label">ელფოსტა</div><div class="ci-value">hello@banneri.ge</div></div>
+        </div>
+        <div class="ci-row">
+          <div class="ci-ico">☎</div>
+          <div><div class="ci-label">ტელეფონი</div><div class="ci-value">+995 32 200 00 00</div></div>
+        </div>
+        <div class="ci-row">
+          <div class="ci-ico">⌂</div>
+          <div><div class="ci-label">მისამართი</div><div class="ci-value">თბილისი, საქართველო</div></div>
+        </div>
+      </div>
+    </div>
+    <form class="cform" onsubmit="return false;">
+      <label for="cname">სახელი</label>
+      <input id="cname" type="text" placeholder="შენი სახელი">
+      <label for="cemail">ელფოსტა</label>
+      <input id="cemail" type="email" placeholder="name@example.com">
+      <label for="cmsg">შეტყობინება</label>
+      <textarea id="cmsg" placeholder="გვითხარი შენი ბიზნესის შესახებ..."></textarea>
+      <button type="submit" class="btn btn-primary">გაგზავნა</button>
+      <p class="form-note">პასუხს გავცემთ 1 სამუშაო დღეში</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div class="brand"><span class="brand-mark"></span>ბანერი</div>
+    <div class="foot-links">
+      <a href="#how">როგორ მუშაობს</a>
+      <a href="#templates">შაბლონები</a>
+      <a href="#pricing">ფასები</a>
+      <a href="#contact">კონტაქტი</a>
+    </div>
+    <div class="mono" style="color:#5e6c89;">© 2026 ბანერი</div>
+  </div>
+</footer>
+
+<!-- ===== EDITOR MODAL ===== -->
+<div class="editor-overlay" id="editorOverlay">
+  <div class="editor-modal">
+    <div class="em-top">
+      <input id="emName" class="em-name-input" value="უსახელო შაბლონი">
+      <div class="em-top-actions">
+        <button class="btn-icon" id="emCloseBtn" aria-label="დახურვა">✕</button>
+      </div>
+    </div>
+    <div class="em-body">
+      <aside class="em-side">
+        <div class="em-side-block">
+          <div class="es-title">ფონის ფერი</div>
+          <div class="swatch-row" id="bgSwatches"></div>
+          <input type="color" id="bgColorPicker" class="color-input">
+        </div>
+        <div class="em-side-block">
+          <div class="es-title">ტექსტის ფერი</div>
+          <div class="swatch-row" id="textSwatches"></div>
+          <input type="color" id="textColorPicker" class="color-input">
+        </div>
+        <div class="em-side-block">
+          <div class="es-title">ფონის სურათი</div>
+          <label class="upload-btn" for="bgImageInput">სურათის ატვირთვა</label>
+          <input type="file" id="bgImageInput" accept="image/*" hidden>
+          <button class="link-btn" id="removeBgImageBtn">სურათის მოშორება</button>
+        </div>
+        <div class="em-side-block">
+          <div class="es-title">გასქელება</div>
+          <button class="link-btn" id="resetTemplateBtn">საწყისზე დაბრუნება</button>
+        </div>
+      </aside>
+      <div class="em-main">
+        <div class="em-canvas-wrap">
+          <div class="canvas em-canvas" id="emCanvas">
+            <span class="editable em-eyebrow" contenteditable="true" data-key="eyebrow">კატეგორია</span>
+            <span class="editable em-title" contenteditable="true" data-key="title">შენი სათაური აქ</span>
+            <span class="editable em-body-text" contenteditable="true" data-key="body">დააწექი და ჩაასწორე ტექსტი შენი შეტყობინებით.</span>
+            <span class="em-btn editable" contenteditable="true" data-key="cta">გაიგე მეტი</span>
+          </div>
+        </div>
+        <div class="em-actions">
+          <button class="btn btn-outline" id="emSaveBtn">შენახვა ჩემს შაბლონებში</button>
+          <button class="btn btn-primary" id="emExportBtn">PNG-ად გადმოწერა</button>
+        </div>
+        <p class="form-note" id="emSavedNote" style="visibility:hidden;">შენახულია ბრაუზერში ✓</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "banneri_templates_v1";
+
+  var defaultTemplates = [
+    { id:"t1", name:"ზაფხულის ფასდაკლება", eyebrow:"გაყიდვები", title:"−30% ყველაფერზე",
+      body:"ამ კვირას ფასდაკლება ნამდვილად ღირს — ნახე ასორტიმენტი მაღაზიაში.",
+      cta:"ნახე აქცია", bg:"linear-gradient(150deg,#16233f,#3d7fff)", textColor:"#ffffff", bgImage:null },
+    { id:"t2", name:"მენიუს განახლება", eyebrow:"რესტორანი", title:"ახალი გემო მენიუში",
+      body:"შემოგვიყევით გასინჯვის და გვითხარით თქვენი აზრი ახალ კერძზე.",
+      cta:"მენიუს ნახვა", bg:"#eef1f6", textColor:"#16233f", bgImage:null },
+    { id:"t3", name:"გახსნის წვეულება", eyebrow:"ღონისძიება", title:"საქართველო ხსნის კარს",
+      body:"მოგვინდეთ ჩვენთან გახსნის საღამოს — მუსიკა, საჩუქრები და სიურპრიზები.",
+      cta:"დარეგისტრირდი", bg:"#0d1730", textColor:"#ffffff", bgImage:null },
+    { id:"t4", name:"ჯავშნის გახსნა", eyebrow:"სალონი", title:"დაიჯავშნე შენი დრო",
+      body:"ახალი გრაფიკი ხელმისაწვდომია — აარჩიე დრო, რომელიც გერგება.",
+      cta:"დაიჯავშნე ახლა", bg:"linear-gradient(150deg,#e8f0ff,#cdddff)", textColor:"#16233f", bgImage:null }
+  ];
+
+  var bgPalette = ["#16233f","#0d1730","#3d7fff","#1f2937","#0f172a","#1e3a8a",
+    "#0ea5e9","#0891b2","#14532d","#166534","#65a30d","#854d0e",
+    "#b45309","#c2410c","#9a3412","#7f1d1d","#991b1b","#be123c",
+    "#9d174d","#86198f","#6b21a8","#4c1d95","#374151","#1f2937",
+    "#eef1f6","#f8fafc","#ffffff","#fef3c7","#fde68a","#fecaca",
+    "#fbcfe8","#e9d5ff","#c7d2fe","#bae6fd","#bbf7d0","#fef08a"];
+  var textPalette = ["#ffffff","#f8fafc","#16233f","#101826","#1f2937","#374151",
+    "#3d7fff","#0ea5e9","#0891b2","#14532d","#65a30d","#b45309",
+    "#c2410c","#9a3412","#7f1d1d","#be123c","#9d174d","#86198f",
+    "#6b21a8","#4c1d95","#cdd6ea","#9ca3af","#fde68a","#fecaca"];
+
+  function loadTemplates(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){ return JSON.parse(raw); }
+    }catch(e){}
+    return defaultTemplates.slice();
+  }
+  function saveTemplates(list){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }catch(e){}
+  }
+
+  var templates = loadTemplates();
+  var currentId = null;
+
+  var gallery = document.getElementById("galleryGrid");
+
+  function cardBgStyle(t){
+    if(t.bgImage){ return "background-image:url(" + t.bgImage + ");background-size:cover;background-position:center;"; }
+    return "background:" + t.bg + ";";
+  }
+
+  function renderGallery(){
+    gallery.innerHTML = "";
+    templates.forEach(function(t){
+      var card = document.createElement("div");
+      card.className = "tpl-card";
+      card.innerHTML =
+        '<button class="tpl-remove" data-remove="'+t.id+'" aria-label="წაშლა">✕</button>' +
+        '<div class="tpl-thumb" style="'+cardBgStyle(t)+'color:'+t.textColor+';">' +
+          '<span class="tlabel">'+escapeHtml(t.eyebrow)+'</span>' +
+          '<div>' +
+            '<div class="tprice" style="font-family:Fraunces,serif;font-size:1.05rem;line-height:1.2;">'+escapeHtml(t.title)+'</div>' +
+            '<span class="tcta" style="display:inline-block;margin-top:8px;background:'+(t.textColor==='#ffffff'?'#ffffff':'#16233f')+';color:'+(t.textColor==='#ffffff'?'#16233f':'#ffffff')+';padding:6px 10px;border-radius:5px;font-size:.66rem;font-weight:700;">'+escapeHtml(t.cta)+'</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="tpl-meta"><span class="tname">'+escapeHtml(t.name)+'</span><span class="tedit">რედაქტირება ›</span></div>';
+      card.addEventListener("click", function(e){
+        if(e.target.closest(".tpl-remove")) return;
+        openEditor(t.id);
+      });
+      gallery.appendChild(card);
+    });
+  }
+
+  function escapeHtml(s){
+    var d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML;
+  }
+
+  gallery.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-remove]");
+    if(!btn) return;
+    e.stopPropagation();
+    var id = btn.getAttribute("data-remove");
+    templates = templates.filter(function(t){ return t.id !== id; });
+    saveTemplates(templates);
+    renderGallery();
+  });
+
+  document.getElementById("addTemplateBtn").addEventListener("click", function(){
+    var id = "t" + Date.now();
+    var blank = { id:id, name:"ახალი შაბლონი", eyebrow:"კატეგორია", title:"შენი სათაური აქ",
+      body:"დააწექი და ჩაასწორე ტექსტი შენი შეტყობინებით.", cta:"გაიგე მეტი",
+      bg:"#16233f", textColor:"#ffffff", bgImage:null };
+    templates.unshift(blank);
+    saveTemplates(templates);
+    renderGallery();
+    openEditor(id);
+  });
+
+  /* ---------- EDITOR MODAL ---------- */
+  var overlay = document.getElementById("editorOverlay");
+  var emCanvas = document.getElementById("emCanvas");
+  var emName = document.getElementById("emName");
+  var bgSwatches = document.getElementById("bgSwatches");
+  var textSwatches = document.getElementById("textSwatches");
+  var bgColorPicker = document.getElementById("bgColorPicker");
+  var textColorPicker = document.getElementById("textColorPicker");
+
+  function buildSwatches(container, palette, onPick){
+    container.innerHTML = "";
+    palette.forEach(function(color){
+      var sw = document.createElement("button");
+      sw.className = "swatch";
+      sw.type = "button";
+      sw.style.background = color;
+      sw.style.border = color === "#ffffff" ? "1px solid #ccc" : "none";
+      sw.addEventListener("click", function(){ onPick(color); });
+      container.appendChild(sw);
+    });
+  }
+
+  function getCurrent(){
+    return templates.find(function(t){ return t.id === currentId; });
+  }
+
+  function applyToCanvas(t){
+    emCanvas.style.background = t.bgImage ? "" : t.bg;
+    emCanvas.style.backgroundImage = t.bgImage ? "url(" + t.bgImage + ")" : "";
+    emCanvas.style.color = t.textColor;
+    emCanvas.querySelector('[data-key="eyebrow"]').textContent = t.eyebrow;
+    emCanvas.querySelector('[data-key="title"]').textContent = t.title;
+    emCanvas.querySelector('[data-key="body"]').textContent = t.body;
+    emCanvas.querySelector('[data-key="cta"]').textContent = t.cta;
+    emName.value = t.name;
+  }
+
+  function openEditor(id){
+    currentId = id;
+    var t = getCurrent();
+    if(!t) return;
+    applyToCanvas(t);
+    document.getElementById("emSavedNote").style.visibility = "hidden";
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeEditor(){
+    overlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  document.getElementById("emCloseBtn").addEventListener("click", closeEditor);
+  overlay.addEventListener("click", function(e){ if(e.target === overlay) closeEditor(); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape" && overlay.classList.contains("open")) closeEditor(); });
+
+  buildSwatches(bgSwatches, bgPalette, function(color){
+    var t = getCurrent(); if(!t) return;
+    t.bgImage = null; t.bg = color;
+    applyToCanvas(t);
+  });
+  buildSwatches(textSwatches, textPalette, function(color){
+    var t = getCurrent(); if(!t) return;
+    t.textColor = color;
+    applyToCanvas(t);
+  });
+  bgColorPicker.addEventListener("input", function(){
+    var t = getCurrent(); if(!t) return;
+    t.bgImage = null; t.bg = bgColorPicker.value;
+    applyToCanvas(t);
+  });
+  textColorPicker.addEventListener("input", function(){
+    var t = getCurrent(); if(!t) return;
+    t.textColor = textColorPicker.value;
+    applyToCanvas(t);
+  });
+
+  document.getElementById("bgImageInput").addEventListener("change", function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var t = getCurrent(); if(!t) return;
+      t.bgImage = ev.target.result;
+      applyToCanvas(t);
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById("removeBgImageBtn").addEventListener("click", function(){
+    var t = getCurrent(); if(!t) return;
+    t.bgImage = null;
+    applyToCanvas(t);
+  });
+  document.getElementById("resetTemplateBtn").addEventListener("click", function(){
+    var t = getCurrent(); if(!t) return;
+    var def = defaultTemplates.find(function(d){ return d.id === t.id; });
+    if(def){
+      Object.assign(t, JSON.parse(JSON.stringify(def)));
+      applyToCanvas(t);
+    }
+  });
+
+  /* live text edits */
+  emCanvas.addEventListener("input", function(e){
+    var key = e.target.getAttribute("data-key");
+    if(!key) return;
+    var t = getCurrent(); if(!t) return;
+    t[key] = e.target.textContent;
+  });
+  emName.addEventListener("input", function(){
+    var t = getCurrent(); if(!t) return;
+    t.name = emName.value || "უსახელო შაბლონი";
+  });
+
+  document.getElementById("emSaveBtn").addEventListener("click", function(){
+    saveTemplates(templates);
+    renderGallery();
+    var note = document.getElementById("emSavedNote");
+    note.style.visibility = "visible";
+    setTimeout(function(){ note.style.visibility = "hidden"; }, 2200);
+  });
+
+  document.getElementById("emExportBtn").addEventListener("click", function(){
+    saveTemplates(templates);
+    var t = getCurrent();
+    html2canvas(emCanvas, { scale:3, backgroundColor:null }).then(function(canvas){
+      var link = document.createElement("a");
+      link.download = (t ? t.name.replace(/[^a-zA-Z0-9ა-ჰ\- ]/g,"").trim() || "banner" : "banner") + ".png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+  });
+
+  /* mobile nav toggle */
+  var toggle = document.querySelector(".navtoggle");
+  var navlinks = document.querySelector(".navlinks");
+  if(toggle){
+    toggle.addEventListener("click", function(){
+      navlinks.style.display = navlinks.style.display === "flex" ? "none" : "flex";
+      navlinks.style.position = "absolute";
+      navlinks.style.top = "72px";
+      navlinks.style.left = "0";
+      navlinks.style.right = "0";
+      navlinks.style.background = "#f4f6fa";
+      navlinks.style.flexDirection = "column";
+      navlinks.style.padding = "20px 28px";
+      navlinks.style.borderBottom = "1px solid #d8dee9";
+      navlinks.style.gap = "16px";
+    });
+  }
+
+  /* static demo canvas opens real editor */
+  var demoOpener = document.getElementById("demoCanvasOpener");
+  if(demoOpener){
+    var openFirst = function(){ if(templates[0]) openEditor(templates[0].id); };
+    demoOpener.addEventListener("click", openFirst);
+    demoOpener.addEventListener("keydown", function(e){ if(e.key === "Enter") openFirst(); });
+  }
+
+  renderGallery();
+})();
+</script>
+</body>
+</html>
+ 
